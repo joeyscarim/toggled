@@ -5,118 +5,117 @@
 //  Created by Joey Scarim on 6/19/20.
 //  Copyright © 2020 Joey Scarim. All rights reserved.
 //
+//
+
+// thank yous / code inspiration / doc sources
+// https://github.com/elegantchaos/Displays/blob/c7ff510c643dd21871ba1da6e4347dcf11124e50/Sources/Displays/Display.swift
+// https://gist.github.com/lilyball/569d5ba0f1b0961a15c0
 
 import Cocoa
-import SwiftUI
 
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
-
-    var window: NSWindow!
-    var popover: NSPopover!
+    
     var statusBarItem: NSStatusItem!
-
-
+    var secondaryDisplayId: UInt32!
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Create the SwiftUI view that provides the window contents.
-          let statusBar = NSStatusBar.system
-           statusBarItem = statusBar.statusItem(
-               withLength: NSStatusItem.squareLength)
-           statusBarItem.button?.title = "✌️"
-
-           let statusBarMenu = NSMenu(title: "Cap Status Bar Menu")
-           statusBarItem.menu = statusBarMenu
-
+        
+        // status bar menu setup
+        let statusBar = NSStatusBar.system
+        statusBarItem = statusBar.statusItem(
+            withLength: NSStatusItem.squareLength)
+        
+        statusBarItem.button?.title =  "✌️"
+        
+        let statusBarMenu = NSMenu(title: "")
+        statusBarItem.menu = statusBarMenu
+        
+        // set the secondary monitor id, used in toggleSecondary
+        findAndSetSecondaryDisplayId()
+        
+        // build the menu
+        statusBarMenu.addItem(
+            withTitle: "Toggle Secondary",
+            action: #selector(AppDelegate.toggleSecondary),
+            keyEquivalent: "1")
         
         statusBarMenu.addItem(
-                 withTitle: "Toggle Primary",
-                 action: #selector(AppDelegate.orderABurrito),
-                 keyEquivalent: "1")
+            withTitle: "Toggle Dual",
+            action: #selector(AppDelegate.toggleDual),
+            keyEquivalent: "2")
         
-           statusBarMenu.addItem(
-               withTitle: "Toggle Secondary",
-               action: #selector(AppDelegate.orderABurrito),
-               keyEquivalent: "2")
-
-           statusBarMenu.addItem(
-               withTitle: "Toggle Dual",
-               action: #selector(AppDelegate.cancelBurritoOrder),
-               keyEquivalent: "3")
-
+        statusBarMenu.insertItem(NSMenuItem.separator(), at: 2)
         
-
+        statusBarMenu.addItem(
+            withTitle: "About",
+            action: #selector(AppDelegate.aboutApp),
+            keyEquivalent: "")
+        
+        statusBarMenu.addItem(
+            withTitle: "Quit",
+            action: #selector(AppDelegate.quitApp),
+            keyEquivalent: "")
     }
     
-    @objc func orderABurrito() {
-          print("Ordering a burrito!")
-      let displaysMirrored = CGDisplayIsInMirrorSet(CGMainDisplayID())
-        print(displaysMirrored)
-//        multiConfigureDisplays(configRef, secondaryDspys, numberOfOnlineDspys - 1, CGMainDisplayID());
-//        CGDisplayConfigRef configRef;
-
-        printDisplays()
-
-//        CGGetActiveDisplayList(2)
-//        let display2ID: UInt32 = 69733568
-//        let configRef = CGDisplayConfigRef
-//        CGBeginDisplayConfiguration(&configRef)
-//        let id: CGDirectDisplayID
-
+    
+    @objc func aboutApp(){
+        let alert = NSAlert()
+        alert.messageText = NSLocalizedString("Toggled, v1.0", comment: "")
+        alert.informativeText = NSLocalizedString("by Joey Scarim", comment: "")
+        alert.addButton(withTitle: NSLocalizedString("Close", comment: ""))
+        alert.runModal()
+    }
+    
+    @objc func quitApp(){
+        for runningApplication in NSWorkspace.shared.runningApplications {
+            let appName = runningApplication.localizedName
+            if appName == "Toggled" {
+                runningApplication.terminate()
+            }
+        }
+    }
+    
+    // set mirror mode to set main display to match secondary
+    @objc func toggleSecondary() {
+        statusBarItem.button?.title =   "☝️"
+        
         var configRef: CGDisplayConfigRef?
         CGBeginDisplayConfiguration(&configRef)
-
-        CGConfigureDisplayMirrorOfDisplay( configRef, CGMainDisplayID(), 69733568);
+        CGConfigureDisplayMirrorOfDisplay( configRef, CGMainDisplayID(), secondaryDisplayId);
         CGCompleteDisplayConfiguration(configRef, .forSession)
-
-//        1440 x 900
-        
-
-      }
-    
-   func printDisplays() {
-           var displayCount: UInt32 = 0;
-           var result = CGGetActiveDisplayList(0, nil, &displayCount)
-               
-           if result != .success {
-               print("error: \(result)")
-               return
-           }
-
-           let allocated = Int(displayCount)
-           let activeDisplays = UnsafeMutablePointer<CGDirectDisplayID>.allocate(capacity: allocated)
-           result = CGGetActiveDisplayList(displayCount, activeDisplays, &displayCount)
-           if result != .success {
-               print("error: \(result)")
-               return
-           }
-
-//           print("\(displayCount) displays:")
-           for i in 0..<displayCount {
-               print("[\(i)] - \(activeDisplays[Int(i)])")
-           }
-    
-    print( activeDisplays[Int(1)]);
-    
-           activeDisplays.deallocate()
-       }
-
-
-      @objc func cancelBurritoOrder() {
-          print("Canceling your order :(")
-//        var id: CGDirectDisplayID
-
-        var token: CGDisplayConfigRef?
-        CGBeginDisplayConfiguration(&token)
-        CGConfigureDisplayMirrorOfDisplay(token, 69733568, kCGNullDirectDisplay)
-        CGCompleteDisplayConfiguration(token, .forSession)
-      }
-
-    func applicationWillTerminate(_ aNotification: Notification) {
-        // Insert code here to tear down your application
     }
     
-
-
-
+    // set mirror mode to null, null
+    @objc func toggleDual() {
+        statusBarItem.button?.title =  "✌️"
+        
+        var configRef: CGDisplayConfigRef?
+        CGBeginDisplayConfiguration(&configRef)
+        CGConfigureDisplayMirrorOfDisplay(configRef, kCGNullDirectDisplay, kCGNullDirectDisplay)
+        CGCompleteDisplayConfiguration(configRef, .forSession)
+    }
+    
+    // find and set secondary display id
+    func findAndSetSecondaryDisplayId() {
+        
+        // get count of attached monitors
+        var displayCount: UInt32 = 0;
+        CGGetActiveDisplayList(0, nil, &displayCount)
+        print(displayCount)
+        
+        // create array of active display ids
+        let allocated = Int(2)
+        let activeDisplays = UnsafeMutablePointer<CGDirectDisplayID>.allocate(capacity: allocated)
+        CGGetActiveDisplayList(displayCount, activeDisplays, &displayCount)
+        
+        // set secondary display id to active display at position 2/ index 1
+        secondaryDisplayId = activeDisplays[Int(1)]
+        
+        // cleanup
+        activeDisplays.deallocate()
+    }
+    
+    
 }
 
