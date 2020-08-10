@@ -11,6 +11,13 @@
 // https://github.com/elegantchaos/Displays/blob/c7ff510c643dd21871ba1da6e4347dcf11124e50/Sources/Displays/Display.swift
 // https://gist.github.com/lilyball/569d5ba0f1b0961a15c0
 
+// https://developer.apple.com/documentation/appkit/nsmenu
+// https://developer.apple.com/documentation/coregraphics/1454531-cgconfiguredisplaymirrorofdispla
+
+// a lightweight menu bar extension that allows you to toggle between 2 displays, and mirroring them (with the secondary display as the primary)
+// i use this everyday to toggle between my typical macbook + monitor setup, and macbook only + another source on my monitor (nintendo switch, chromecast, apple tv, whatever).
+// have a different setup? fiddle with the code to make it work for your setup.
+
 import Cocoa
 
 @NSApplicationMain
