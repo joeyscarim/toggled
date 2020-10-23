@@ -1,6 +1,3 @@
-# toggled
-macOS menu bar app for toggling connected display on and off
-
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
