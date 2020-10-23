@@ -9,7 +9,10 @@ macOS menu bar app for toggling connected display on and off
   <h3 align="center">Toggled</h3>
 
   <p align="center">
-    Quickly toggle a Mac's external display on and off
+    Toggle external displays on/off from macOS menu bar
     <br />
   </p>
   </p>
+  
+  <!-- ABOUT THE PROJECT -->
+## About The Project
