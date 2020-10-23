@@ -1,7 +1,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <h1 align="center">🖥✌️⭤💻☝️</h1>
+  <h2 align="center">🖥✌️⭤💻☝️</h2>
 
   <h3 align="center">Toggled</h3>
 
