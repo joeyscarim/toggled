@@ -23,6 +23,13 @@ Easily toggle an external display on/off from your menu bar. Useful for anyone w
 </p>
 
 
-
 <!-- INSTALLATION -->
 ## Installation
+- Download Toggled.app from repo
+
+<!-- Build the app -->
+## Building
+- Clone the repo to your machine
+- Open `Toggled.xcodeproj`
+- Product -> Archive 
+- Distribute -> Copy App
