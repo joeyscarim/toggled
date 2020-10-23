@@ -26,6 +26,7 @@ Easily toggle an external display on/off from your menu bar. Useful for anyone w
 <!-- INSTALLATION -->
 ## Installation
 - Download Toggled.app from repo
+- Run it
 
 <!-- Build the app -->
 ## Building
