@@ -17,7 +17,7 @@
 
 Easily toggle an external display on/off from your menu bar. Useful for anyone who switches their exterenal monitor between multiple sources.
 
-<p float="left">
+<p width="100" float="left">
   <img src="https://raw.githubusercontent.com/joeyscarim/toggled/master/screen1.png" width="100" />
   <img src="https://raw.githubusercontent.com/joeyscarim/toggled/master/screen2.png" width="100" /> 
 </p>
